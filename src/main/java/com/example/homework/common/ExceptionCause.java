@@ -1,4 +1,4 @@
-package com.example.homework.common.exception;
+package com.example.homework.common;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

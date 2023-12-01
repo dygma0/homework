@@ -1,8 +1,8 @@
 package com.example.homework.auth;
 
+import com.example.homework.common.AuthException;
+import com.example.homework.common.ExceptionCause;
 import com.example.homework.common.StandardCalendar;
-import com.example.homework.common.exception.AuthException;
-import com.example.homework.common.exception.ExceptionCause;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
