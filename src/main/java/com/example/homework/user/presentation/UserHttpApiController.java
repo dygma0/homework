@@ -1,6 +1,8 @@
 package com.example.homework.user.presentation;
 
 import com.example.homework.decorator.Authenticated;
+import com.example.homework.user.application.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,8 +12,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
+@RequiredArgsConstructor
 public class UserHttpApiController {
+
+  private final UserService userService;
 
   @Authenticated
   @RequestMapping("/me")
@@ -24,5 +29,10 @@ public class UserHttpApiController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<String> getUser(@PathVariable String username) {
     return ResponseEntity.ok(username);
+  }
+
+  @RequestMapping("/token")
+  public ResponseEntity<String> token(String username) {
+    return ResponseEntity.ok(userService.login(username));
   }
 }
