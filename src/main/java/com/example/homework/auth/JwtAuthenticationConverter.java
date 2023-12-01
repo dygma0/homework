@@ -13,9 +13,9 @@ public class JwtAuthenticationConverter implements AuthenticationConverter {
 
   @Override
   public JwtAuthenticationToken convert(HttpServletRequest request) {
-    final String authenzation = request.getHeader(JWT_AUTHORIZATION_HEADER_NAME);
-    if (authenzation != null && authenzation.startsWith(JWT_PREFIX)) {
-      final String token = authenzation.substring(JWT_PREFIX_LENGTH);
+    final String tokenHeader = request.getHeader(JWT_AUTHORIZATION_HEADER_NAME);
+    if (tokenHeader != null && tokenHeader.startsWith(JWT_PREFIX)) {
+      final String token = tokenHeader.substring(JWT_PREFIX_LENGTH);
       return new JwtAuthenticationToken(token);
     }
 

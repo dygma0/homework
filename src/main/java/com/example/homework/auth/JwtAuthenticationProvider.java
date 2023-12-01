@@ -7,28 +7,39 @@ import org.springframework.security.core.AuthenticationException;
 
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-  private final JwtUtil jwtUtil;
+  private final JwtProvider jwtProvider;
 
-  public JwtAuthenticationProvider(JwtUtil jwtUtil) {
-    this.jwtUtil = jwtUtil;
+  public JwtAuthenticationProvider(final JwtProvider jwtProvider) {
+    this.jwtProvider = jwtProvider;
   }
 
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     try {
-      JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authentication;
-      String token = (String) jwtAuthenticationToken.getCredentials();
-      String username = jwtUtil.getUsername(token);
-      return new JwtAuthenticationToken(username, Collections.emptyList());
+      return jwtAuthenticate(authentication);
     } catch (JwtAuthenticationException e) {
       throw e;
     } catch (Exception e) {
-      throw new JwtAuthenticationException("JWT token is incorrect");
+      throw new JwtAuthenticationException("Unkonw jwt authentication error", e);
     }
   }
 
   @Override
   public boolean supports(Class<?> authentication) {
     return JwtAuthenticationToken.class.isAssignableFrom(authentication);
+  }
+
+  private JwtAuthenticationToken jwtAuthenticate(Authentication authentication) {
+    if (authentication instanceof JwtAuthenticationToken authenticationToken) {
+      return verifyJwtAuthenticationToken(authenticationToken);
+    }
+    throw new JwtAuthenticationException("JWT token is incorrect");
+  }
+
+  private JwtAuthenticationToken verifyJwtAuthenticationToken(
+      JwtAuthenticationToken authentication) {
+    String token = (String) authentication.getCredentials();
+    String username = jwtProvider.getSubject(token);
+    return new JwtAuthenticationToken(username, Collections.emptyList());
   }
 }
