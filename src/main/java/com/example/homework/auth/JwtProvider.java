@@ -39,11 +39,11 @@ public class JwtProvider {
   }
 
   public String getSubject(final String token) {
+    validateAccessToken(token);
     return parseToken(token).getBody().getSubject();
   }
 
   private Jws<Claims> parseToken(final String token) {
-    validateAccessToken(token);
     return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
   }
 
