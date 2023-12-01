@@ -5,7 +5,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 import com.example.homework.auth.JwtProvider;
 import com.example.homework.fixture.UserFixture;
-import com.example.homework.user.domain.User;
 import io.restassured.RestAssured;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
