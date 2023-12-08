@@ -5,8 +5,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
@@ -16,7 +14,6 @@ import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final AuthenticationConverter authConverter = new JwtAuthenticationConverter();
@@ -24,7 +21,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       new JwtAuthenticationEntryPointFailureHandler();
   private final SecurityContextHolderStrategy securityContextHolderStrategy =
       SecurityContextHolder.getContextHolderStrategy();
-  private final AuthenticationManager authenticationManager;
+
+  private final JwtAuthenticationProvider authenticationProvider;
+
+  public JwtAuthenticationFilter(final JwtAuthenticationProvider authenticationProvider) {
+    this.authenticationProvider = authenticationProvider;
+  }
 
   @Override
   protected void doFilterInternal(
@@ -33,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     try {
       final Authentication token = this.authConverter.convert(request);
       if (token != null) {
-        final Authentication authResult = this.authenticationManager.authenticate(token);
+        final Authentication authResult = this.authenticationProvider.authenticate(token);
         final SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
         context.setAuthentication(authResult);
         this.securityContextHolderStrategy.setContext(context);

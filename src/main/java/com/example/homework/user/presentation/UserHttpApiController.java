@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -19,19 +16,20 @@ public class UserHttpApiController {
   private final UserService userService;
 
   @Authenticated
-  @RequestMapping("/me")
+  @GetMapping("/me")
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<String> me(@AuthenticationPrincipal String username) {
     return ResponseEntity.ok(username);
   }
 
-  @RequestMapping("/{username}")
+  @GetMapping("/{username}")
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<String> getUser(@PathVariable String username) {
     return ResponseEntity.ok(username);
   }
 
-  @RequestMapping("/token")
+  @PostMapping("/token")
+  @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<String> token(String username) {
     return ResponseEntity.ok(userService.login(username));
   }
